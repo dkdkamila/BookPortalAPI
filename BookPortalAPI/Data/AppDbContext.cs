@@ -22,7 +22,7 @@ namespace BookPortalAPI.Data
        .HasForeignKey(r => r.BookId);
 
             modelBuilder.Entity<Review>()
-                .HasOne(r => r.UserName)
+                .HasOne(r => r.Username)
                 .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.UserId);
         }
