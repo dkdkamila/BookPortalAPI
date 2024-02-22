@@ -20,7 +20,7 @@ namespace BookPortalAPI.Models
     {
         public int Id { get; set; }
         [Required]
-        public string? UserId { get; set; }
+        public int UserId { get; set; }
         public User? Username { get; set; }
         [Required]
         public string? ReviewText { get; set; }
