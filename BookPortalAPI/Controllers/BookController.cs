@@ -100,5 +100,20 @@ namespace BookPortalAPI.Controllers
         {
             return _context.Books.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBooks(int? userId = null)
+        {
+            IQueryable<Book> booksQuery = _context.Books;
+
+            // Filtrera böcker baserat på användarens ID om det finns
+            if (userId.HasValue)
+            {
+                booksQuery = booksQuery.Where(b => b.Reviews.Any(r => r.UserId == userId));
+            }
+
+            var books = await booksQuery.ToListAsync();
+            return Ok(books);
+        }
     }
 }
