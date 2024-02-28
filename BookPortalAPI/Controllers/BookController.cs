@@ -109,7 +109,7 @@ namespace BookPortalAPI.Controllers
             // Filtrera böcker baserat på användarens ID om det finns
             if (userId.HasValue)
             {
-                booksQuery = booksQuery.Where(b => b.Reviews.Any(r => r.UserId == userId));
+                booksQuery = booksQuery.Where(b => b.Reviews != null && b.Reviews.Any(r => r.UserId == userId));
             }
 
             var books = await booksQuery.ToListAsync();
