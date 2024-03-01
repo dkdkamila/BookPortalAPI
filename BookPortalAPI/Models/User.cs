@@ -22,5 +22,12 @@ namespace BookPortalAPI.Models
 
         // Samling av recensioner för användaren
         public ICollection<Review>? Reviews { get; set; }
+
+
+    }
+    public class UserLogin
+    {
+        public string? Username { get; set; }
+        public string? Password { get; set; }
     }
 }

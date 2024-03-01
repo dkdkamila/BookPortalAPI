@@ -101,7 +101,8 @@ namespace BookPortalAPI.Controllers
             return _context.Books.Any(e => e.Id == id);
         }
 
-        [HttpGet]
+        // GET: api/Book/GetBooksByUserId
+        [HttpGet("GetBooksByUserId")]
         public async Task<IActionResult> GetBooks(int? userId = null)
         {
             IQueryable<Book> booksQuery = _context.Books;

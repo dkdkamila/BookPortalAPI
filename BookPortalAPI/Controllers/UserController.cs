@@ -20,6 +20,30 @@ namespace BookPortalAPI.Controllers
         {
             _context = context;
         }
+        // POST: api/User/Register
+        [HttpPost("Register")]
+        public async Task<ActionResult<User>> Register(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+        }
+
+        // POST: api/User/Login
+        [HttpPost("Login")]
+        public async Task<ActionResult<User>> Login(UserLogin userLogin)
+        {
+            var user = await _context.Users
+                .SingleOrDefaultAsync(u => u.Username == userLogin.Username && u.Password == userLogin.Password);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
 
         // GET: api/User
         [HttpGet]
