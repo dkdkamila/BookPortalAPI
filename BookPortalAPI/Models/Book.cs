@@ -14,6 +14,7 @@ namespace BookPortalAPI.Models
         public byte[]? CoverImage { get; set; }
 
         public ICollection<Review>? Reviews { get; set; }
+        public ICollection<BookImage>? Images { get; set; }
     }
 
     public class Review
