@@ -72,8 +72,19 @@ namespace BookPortalAPI.Controllers
         // POST: api/Book
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book)
+        public async Task<ActionResult<Book>> PostBook([FromForm] Book book, IFormFile coverImage)
         {
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                using (var stream = coverImage.OpenReadStream())
+                {
+                    using (var binaryReader = new System.IO.BinaryReader(stream))
+                    {
+                        book.CoverImage = binaryReader.ReadBytes((int)stream.Length);
+                    }
+                }
+            }
+
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
@@ -116,5 +127,6 @@ namespace BookPortalAPI.Controllers
             var books = await booksQuery.ToListAsync();
             return Ok(books);
         }
+
     }
 }
