@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using BookPortalAPI.Data;
 using BookPortalAPI.Models;
 
+
 namespace BookPortalAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -71,31 +72,19 @@ namespace BookPortalAPI.Controllers
 
         // POST: api/Book
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook([FromForm] BookFormData formData)
+        public async Task<ActionResult<Book>> PostBook([FromBody] Book book)
         {
             try
             {
-                if (formData == null || formData.Book == null)
+                if (book == null)
                 {
                     return BadRequest("Ingen giltig data mottagen.");
                 }
 
-                if (formData.CoverImage != null && formData.CoverImage.Length > 0)
-                {
-
-                    {
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await formData.CoverImage.CopyToAsync(memoryStream);
-                            formData.Book.CoverImage = memoryStream.ToArray();
-                        }
-                    }
-                }
-
-                _context.Books.Add(formData.Book);
+                _context.Books.Add(book);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetBook", new { id = formData.Book.Id }, formData.Book);
+                return CreatedAtAction("GetBook", new { id = book.Id }, book);
             }
             catch (Exception ex)
             {
@@ -103,7 +92,6 @@ namespace BookPortalAPI.Controllers
                 return StatusCode(500, $"Ett fel uppstod vid skapande av boken: {ex.Message}");
             }
         }
-
         // DELETE: api/Book/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)

@@ -11,10 +11,10 @@ namespace BookPortalAPI.Models
         public string? Author { get; set; }
         public string? Description { get; set; }
         public double Rating { get; set; }
-        public byte[]? CoverImage { get; set; }
+
 
         public ICollection<Review>? Reviews { get; set; }
-        public ICollection<BookImage>? Images { get; set; }
+
     }
 
     public class Review

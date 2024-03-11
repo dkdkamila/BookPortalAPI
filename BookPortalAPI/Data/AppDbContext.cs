@@ -14,7 +14,7 @@ namespace BookPortalAPI.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<BookImage> BookImages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,10 +28,6 @@ namespace BookPortalAPI.Data
                 .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.UserId);
 
-            modelBuilder.Entity<Book>()
-        .HasMany(b => b.Images) // En bok kan ha många bilder
-        .WithOne(i => i.Book)   // Varje bild tillhör en bok
-        .HasForeignKey(i => i.BookId); // Foreign key för relationen
 
         }
 
