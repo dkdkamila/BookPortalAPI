@@ -70,25 +70,36 @@ namespace BookPortalAPI.Controllers
         }
 
         // POST: api/Book
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook([FromForm] Book book, IFormFile coverImage)
+        public async Task<ActionResult<Book>> PostBook([FromForm] BookFormData formData)
         {
-            if (coverImage != null && coverImage.Length > 0)
+            try
             {
-                using (var stream = coverImage.OpenReadStream())
+                if (formData.CoverImage != null && formData.CoverImage.Length > 0)
                 {
-                    using (var binaryReader = new System.IO.BinaryReader(stream))
+                    using (var stream = formData.CoverImage.OpenReadStream())
                     {
-                        book.CoverImage = binaryReader.ReadBytes((int)stream.Length);
+                        using (var binaryReader = new System.IO.BinaryReader(stream))
+                        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                            formData.Book.CoverImage = binaryReader.ReadBytes((int)stream.Length);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                        }
                     }
                 }
+
+#pragma warning disable CS8604 // Possible null reference argument.
+                _ = _context.Books.Add(formData.Book);
+#pragma warning restore CS8604 // Possible null reference argument.
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetBook", new { id = formData.Book.Id }, formData.Book);
             }
-
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBook", new { id = book.Id }, book);
+            catch (Exception)
+            {
+                // Logga felmeddelandet eller hantera det på annat sätt
+                return StatusCode(500, "Ett fel uppstod vid skapande av boken.");
+            }
         }
 
         // DELETE: api/Book/5
