@@ -75,30 +75,32 @@ namespace BookPortalAPI.Controllers
         {
             try
             {
+                if (formData == null || formData.Book == null)
+                {
+                    return BadRequest("Ingen giltig data mottagen.");
+                }
+
                 if (formData.CoverImage != null && formData.CoverImage.Length > 0)
                 {
                     using (var stream = formData.CoverImage.OpenReadStream())
                     {
-                        using (var binaryReader = new System.IO.BinaryReader(stream))
+                        using (var memoryStream = new MemoryStream())
                         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                            formData.Book.CoverImage = binaryReader.ReadBytes((int)stream.Length);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                            await formData.CoverImage.CopyToAsync(memoryStream);
+                            formData.Book.CoverImage = memoryStream.ToArray();
                         }
                     }
                 }
 
-#pragma warning disable CS8604 // Possible null reference argument.
-                _ = _context.Books.Add(formData.Book);
-#pragma warning restore CS8604 // Possible null reference argument.
+                _context.Books.Add(formData.Book);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction("GetBook", new { id = formData.Book.Id }, formData.Book);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Logga felmeddelandet eller hantera det på annat sätt
-                return StatusCode(500, "Ett fel uppstod vid skapande av boken.");
+                return StatusCode(500, $"Ett fel uppstod vid skapande av boken: {ex.Message}");
             }
         }
 
