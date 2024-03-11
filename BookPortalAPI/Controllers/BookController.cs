@@ -82,7 +82,7 @@ namespace BookPortalAPI.Controllers
 
                 if (formData.CoverImage != null && formData.CoverImage.Length > 0)
                 {
-                    using (var stream = formData.CoverImage.OpenReadStream())
+
                     {
                         using (var memoryStream = new MemoryStream())
                         {
