@@ -6,5 +6,6 @@ namespace BookPortalAPI.Models
     {
         public Book? Book { get; set; }
         public List<Review>? Reviews { get; set; }
+         public double Rating { get; set; }
     }
 }
